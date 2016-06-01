@@ -8,6 +8,7 @@
   
 ### Step 3.
 >run script
+
 >java -javaagent:jolokia-jvm.jar=port=8778,host=localhost -Dtangosol.coherence.management=all -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false -cp ..\lib\coherence.jar com.tangosol.net.management.MBeanConnector –rmi
 
 ### Step 4.
