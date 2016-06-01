@@ -1,0 +1,504 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta name="description" content="Coherence Web Monitor"/>
+		<title>Coherence Monitoring</title>
+		<link rel="stylesheet" type="text/css" href="coherence.css"></link>
+
+		<script type="text/javascript" src="jquery-1.11.1.min.js"></script>
+		<script type="text/javascript" src="json2-min.js"></script>
+		<script type="text/javascript" src="jolokia-min.js"></script>
+		<script type="text/javascript" src="jolokia-simple-min.js"></script>
+		
+		<script type="text/javascript" src="amcharts/amcharts.js"></script>
+		<script type="text/javascript" src="amcharts/serial.js"></script>
+		<script type="text/javascript" src="amcharts/pie.js"></script>
+		<script type="text/javascript" src="amcharts/themes/none.js"></script>
+		<script type="text/javascript" src="amcharts/themes/patterns.js"></script>
+		<script type="text/javascript" src="amcharts/themes/light.js"></script>
+		<script type="text/javascript" src="amcharts/themes/dark.js"></script>
+		<script type="text/javascript" src="amcharts/themes/chalk.js"></script>
+		<script type="text/javascript" src="amcharts/themes/black.js"></script>
+		
+		<script type="text/javascript" src="coherence.js"></script>
+		<script type="text/javascript" src="coherence-overview.js"></script>
+		<script type="text/javascript" src="coherence-machines.js"></script>
+		<script type="text/javascript" src="coherence-members.js"></script>
+		<script type="text/javascript" src="coherence-services.js"></script>
+		<script type="text/javascript" src="coherence-caches.js"></script>
+		<script type="text/javascript" src="coherence-indexs.js"></script>
+		<script type="text/javascript" src="coherence-partition.js"></script>
+
+	</head>
+
+	<body>
+		<div class="container">
+			<h1>Coherence Monitoring</h1>
+			<ul class="tabs">
+				<li><a href="#overview">Overview</a></li>
+				<li><a href="#machines">Machines</a></li>
+				<li><a href="#members">Members</a></li>
+				<li><a href="#services">Services</a></li>
+				<li><a href="#caches">Caches</a></li>
+				<li><a href="#indexs">Indexs</a></li>
+				<li><a href="#partition">Partitions</a></li>
+				<li><a href="#setup">Setup</a></li>
+			</ul>
+			<div class="tab_container">
+				<div id="overview" class="tab_content">
+					<center>
+					<table>
+						<tr>
+							<td align="center">
+								<table>
+									<tr>
+										<td class="tdh">Cluster Name:</td>
+										<td id="overview_clustername" class="box1"></td>
+										<td class="tdh">Version:</td>
+										<td id="overview_version" class="box1"></td>
+										<td class="tdh">Members:</td>
+										<td id="overview_members" class="box1"></td>
+										<td class="tdh">RefreshDate:</td>
+										<td id="overview_refreshdate" class="box1"></td>
+										<td class="tdh">Cluster StatusHA:</td>
+										<td id="overview_status" class="box1"></td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+						<tr><td height="30"></td></tr>
+						<tr>
+							<td align="center">
+								<table>
+									<tr>
+										<th id="memoryChart_title">Storage Memory Usage</th>
+										<th>Network Success Rate</th>
+									</tr>								
+									<tr>
+										<td id="memoryChart" style="width: 500px; height: 350px;"></td>
+										<td id="networkChart" style="width: 500px; height: 350px;"></td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+					</table>
+					</center>
+				</div>
+				<div id="machines" class="tab_content">
+					<center>
+					<table>
+						<tr>
+							<td align="center">
+								<table >
+									<tr>
+										<td class="tdh">Total Machines:</td>
+										<td id="machine_machines" class="box1"></td>
+										<td class="tdh">Total Cluster Cores:</td>
+										<td id="machine_cores" class="box1"></td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+						<tr>
+							<td align="center">
+								<table id="machine_table" class="clickTable">
+									<tr>
+										<th>Machine Name</th>
+										<th>Core Count</th>
+										<th>Load Average</th>
+										<th>Total Physical Memory</th>
+										<th>Free Physical Memory</th>
+										<th>Free Memory %</th>
+										<th>Processors</th>
+										<th>OS Name</th>
+									</tr>
+								</table>
+							</td>
+						</tr>
+						<tr><td height="30"></td></tr>
+						<tr>
+							<th>CPU Usage</th>
+						</tr>
+						<tr>
+							<td id="machineChart" style="width: 1000px; height: 300px;"></td>
+						</tr>						
+					</table>
+					</center>
+				</div>
+				<div id="members" class="tab_content">
+					<center>
+					<table>
+						<tr>
+							<td align="center">
+								<table>
+									<tr>
+										<td class="tdh">Cluster Name:</td>
+										<td id="member_cluster" class="box1"></td>
+										<td class="tdh">License Mode:</td>
+										<td id="member_license" class="box1"></td>
+										<td class="tdh">Oldest Member:</td>
+										<td id="member_oldest" class="box1"></td>
+										<td width="15"></td>
+										<td id="member_memoryChart_title"></td>
+									</tr>
+									<tr>
+										<td class="tdh">Version:</td>
+										<td id="member_version" class="box1"></td>
+										<td class="tdh">Total Cluster Memory(MB):</td>
+										<td id="member_cluster_maxmem" class="box1"></td>
+										<td class="tdh">Total Storage Memory(MB):</td>
+										<td id="member_storage_maxmem" class="box1"></td>
+										<td width="15"></td>
+										<td id="member_memoryChart" rowspan="3" style="width: 200px; height: 70px;"></td>
+
+									</tr>
+									<tr>
+										<td class="tdh">Total Members:</td>
+										<td id="member_members" class="box1"></td>
+										<td class="tdh">Total Cluster Memory Used(MB):</td>
+										<td id="member_cluster_usedmem" class="box1"></td>
+										<td class="tdh">Total Storage Memory Used(MB):</td>
+										<td id="member_storage_usedmem" class="box1"></td>
+									</tr>
+									<tr>
+										<td class="tdh">Member Departure Count:</td>
+										<td id="member_departure" class="box1"></td>
+										<td class="tdh">Total Cluster Memory Avail(MB):</td>
+										<td id="member_cluster_freemem" class="box1"></td>
+										<td class="tdh">Total Storage Memory Avail(MB):</td>
+										<td id="member_storage_freemem" class="box1"></td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+						<tr><td height="30"></td></tr>
+						<tr>
+							<td align="center">
+								<table id="member_table" class="clickTable">
+									<tr>
+										<th>Node Id</th>
+										<th>Unicast Address</th>
+										<th>Port</th>
+										<th>PId</th>
+										<th>Role</th>
+										<th>Storage Enable</th>										
+										<th>Max Mem (MB)</th>
+										<th>Used Mem (MB)</th>
+										<th>Free Mem (MB)</th>
+										<th>Publisher Success Rate</th>
+										<th>Receiver Success Rate</th>
+										<th>Send Q Size</th>
+									</tr>
+								</table>
+							</td>
+						</tr>
+					</table>
+					</center>
+				</div>
+				<div id="services" class="tab_content">
+					<center>
+					<table>
+						<tr>
+							<td align="center">
+								<table id="service_table" class="clickTable">
+									<tr>
+										<th>Service Name</th>
+										<th>Type</th>
+										<th>StatusHA</th>
+										<th>BackupCount</th>
+										<th>MemberCount</th>
+										<th>Storage Enabled</th>
+										<th>Partitions</th>
+										<th>Endangered</th>
+										<th>Vulnerable</th>
+										<th>Unbalanced</th>
+										<th>Pending</th>
+										<th>SeniorMemberID</th>
+									</tr>
+								</table>
+							</td>
+						</tr>
+						<tr><td height="30"></td></tr>
+						<tr>
+							<td align="center">
+								<table>
+									<tr>
+										<td class="tdh">Selected Service:</td>
+										<td id="service_selected" class="box1"></td>
+										<td class="tdh">Total Threads:</td>
+										<td id="service_totalThreads" class="box1"></td>
+										<td class="tdh">Total Idle:</td>
+										<td id="service_totalIdel" class="box1"></td>
+										<td class="tdh">Total Utilization:</td>
+										<td id="service_totalUtilization" class="box1"></td>
+									</tr>
+								</table>
+							</td>
+						</tr>	
+						<tr>
+							<td align="center">
+								<table id="service_node_table">
+									<tr>
+										<th>Node Id</th>
+										<th>Threads</th>
+										<th>Idle Threads</th>
+										<th>Thread Util %</th>
+										<th>Task Avge(ms)</th>
+										<th>Task Backlog</th>
+										<th>Request Avge(ms)</th>
+										<th>Rquest Count</th>
+										<th>Statistics</th>
+									</tr>
+								</table>
+							</td>
+						</tr>	
+					</table>
+					</center>
+				</div>
+				<div id="caches" class="tab_content">
+					<center>
+					<table>
+						<tr>
+							<td>
+								<table>
+									<tr>
+										<td align="center">
+											<table>
+												<tr>
+													<td class="tdh">Total Back Caches:</td>
+													<td id="cahce_totalBackCount" class="box1"></td>
+													<td class="tdh">Total Primary Data Memory(MB):</td>
+													<td id="cache_totalBackMemory" class="box1"></td>
+												</tr>
+											</table>
+										</td>
+									</tr>	
+									<tr>
+										<td align="center">
+											<table id="cache_back_table" class="clickTable">
+												<tr>
+													<th>Cache Type</th>
+													<th>Service/Cache Name</th>
+													<th>ObjCount</th>
+													<th>Memory (B)</th>
+													<th>Memory (MB)</th>
+													<th>ObjSize (B)</th>
+													<th>ExpiryDelay(ms)</th>
+												</tr>
+											</table>
+										</td>
+									</tr>
+									<tr><td height="30"></td></tr>
+									<tr>
+										<td align="center">
+											<table>
+												<tr>
+													<td class="tdh">Total Front Caches:</td>
+													<td id="cahce_totalFrontCount" class="box1"></td>
+													<td class="tdh">Total Front Data Memory(MB):</td>
+													<td id="cache_totalFrontMemory" class="box1"></td>										
+												</tr>
+											</table>
+										</td>
+									</tr>	
+									<tr>
+										<td align="center">
+											<table id="cache_front_table" class="clickTable">
+												<tr>
+													<th>Cache Type</th>
+													<th>Service/Cache Name</th>
+													<th>Front Size</th>
+													<th>Memory (B)</th>
+													<th>Memory (MB)</th>
+													<th>ObjSize (B)</th>
+													<th>ExpiryDelay(ms)</th>
+												</tr>
+											</table>
+										</td>
+									</tr>
+								</table>
+							</td>
+							<td>
+								<table>
+									<tr>
+										<th id="cache_totalMemory"></th>
+									</tr>
+									<tr>
+										<td id="cache_memoryChart" style="width: 350px; height: 350px;"></td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+						<tr><td height="30"></td></tr>
+						
+						
+						<tr>
+							<td align="center" colspan="2">
+								<table>
+									<tr>
+										<td class="tdh">Selected Service/Cache Name:</td>
+										<td id="cahce_selected" class="box1"></td>
+									</tr>
+								</table>
+							</td>
+						</tr>	
+						<tr>
+							<td align="center" colspan="2">
+								<table id="cache_node_table">
+									<tr>
+										<th>Node Id</th>
+										<th>Tier</th>
+										<th>PID</th>
+										<th>ObjCount</th>
+										<th>MemoryUnit</th>
+										<th>Memory (B)</th>
+										<th>Total Gets</th>
+										<th>Total Puts</th>
+										<th>Cache Hits</th>
+										<th>Cache Misses</th>
+										<th>Cache Probability</th>
+										<th>Max Query(ms)</th>
+									</tr>
+								</table>
+							</td>
+						</tr>						
+					</table>
+					</center>
+				</div>
+				<div id="indexs" class="tab_content">
+					<center>
+					<table>
+						<tr>
+							<td align="center">
+								<table id="index_table" class="clickTable">
+									<tr>
+										<th>ServiceName</th>
+										<th>CacheName</th>
+										<th>Node#/Total#</th>
+										<th>IndexCount</th>
+										<th>IndexSize (B)</th>
+									</tr>
+								</table>
+							</td>
+						</tr>
+						<tr><td height="30"></td></tr>
+						<tr>
+							<td align="center">
+								<table>
+									<tr>
+										<td class="tdh">Selected Cache Name:</td>
+										<td id="index_selected" class="box1"></td>
+									</tr>
+								</table>
+							</td>
+						</tr>							
+						<tr>
+							<td align="center">
+								<table id="index_info_table">
+									<tr>
+										<th>Extractor</th>
+										<th>Ordered</th>
+										<th>Footprint (B)</th>
+										<th>Content</th>
+									</tr>
+								</table>
+							</td>
+						</tr>
+					</table>
+					</center>
+				</div>				
+				<div id="partition" class="tab_content">
+					<center>
+					<table>
+						<tr>
+							<td align="center">
+								<table id="partition_table">
+									<tr>
+										<th>ServiceName</th>
+										<th>BackupCount</th>
+										<th>CoordinatorId</th>
+										<th>FairShareBackup</th>
+										<th>FairSharePrimary</th>
+										<th>PartitionCount</th>
+										<th>ServiceMachineCount</th>
+										<th>ServiceNodeCount</th>
+										<th>StrategyName</th>
+									</tr>
+								</table>
+							</td>
+						</tr>
+						<tr><td height="30"></td></tr>
+						<tr>
+							<th>Remaining Distribution Count</th>
+						</tr>
+						<tr>
+							<td id="partitionChart" style="width: 1000px; height: 300px;"></td>
+						</tr>
+					</table>
+					</center>
+				</div>
+				<div id="setup" class="tab_content">
+					<center>
+					<table>
+						<tr>
+							<td align="right">Jolokia URL : </td>
+							<td><input type="text" id="jurl" value="http://localhost:8778/jolokia/"></td>
+						</tr>
+						<tr>
+							<td align="right">ex : </td>
+							<td colspan="2">http://localhost:8778/jolokia/</td>
+						</tr>
+						<tr>
+							<td align="right">Overview interval(ms) : </td>
+							<td><input type="text" id="overInterval" value="5000"></td>
+						</tr>
+						<tr>
+							<td align="right">Machines interval(ms) : </td>
+							<td><input type="text" id="machInterval" value="5000"></td>
+						</tr>
+						<tr>
+							<td align="right">Members interval(ms) : </td>
+							<td><input type="text" id="membInterval" value="30000"></td>
+						</tr>
+						<tr>
+							<td align="right">Services interval(ms) : </td>
+							<td><input type="text" id="servInterval" value="30000"></td>
+						</tr>
+						<tr>
+							<td align="right">Caches interval(ms) : </td>
+							<td><input type="text" id="cachInterval" value="30000"></td>
+						</tr>
+						<tr>
+							<td align="right">Indexs interval(ms) : </td>
+							<td><input type="text" id="indeInterval" value="30000"></td>
+						</tr>
+						<tr>
+							<td align="right">Partitions interval(ms) : </td>
+							<td><input type="text" id="partInterval" value="5000"></td>
+						</tr>	
+						<tr>
+							<td align="right">Background running : </td>
+							<td align="left"><input type="checkbox" id="bgrun"> for all tabs.</td>
+						</tr>	
+						<tr>
+							<td align="center" colspan="2"><button onclick="setup()">done</button></td>
+						</tr>
+						<tr><td height="30"></td></tr>
+						<tr>
+							<td colspan="2"><b>Jonggyou Kim</b> | Principal Sales Consultant | <font color="#FF0000">Oracle</font> Fusion Middleware</td>
+						</tr>
+						<tr>
+							<td colspan="2">jonggyou.kim@oracle.com | +82.10.9719.5800</td>
+						</tr>
+						<tr>
+							<td colspan="2">ORACLE South Korea | Kangnam-Gu | 135-745 Seoul</td>
+						</tr>
+					</table>
+					</center>
+				</div>				
+			</div>
+			<h4 align="right">Jonggyou Kim ( jonggyou.kim@oracle.com )  <font color="#ff4444">Oracle</font> Korea</h4>
+		</div>
+	</body>
+</html>
